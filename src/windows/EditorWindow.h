@@ -34,6 +34,7 @@ class GoToLineWindow;
 class Preferences;
 class StatusView;
 class ToolBar;
+class FunctionView;
 
 
 const BString gAppName = B_TRANSLATE_SYSTEM_NAME("Koder");
@@ -145,6 +146,7 @@ private:
 			std::string		fCurrentLanguage;
 			ToolBar*		fToolbar;
 			StatusView*		fStatusView;
+			FunctionView* 	fFunctionView;
 
 			GoToLineWindow*		fGoToLineWindow;
 			BookmarksWindow*	fBookmarksWindow;
