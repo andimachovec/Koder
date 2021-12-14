@@ -226,9 +226,14 @@ EditorWindow::EditorWindow(bool stagger)
 		B_TRANSLATE("Koder preferences" B_UTF8_ELLIPSIS), "preferences");
 	fToolbar->AddAction(MAINMENU_SEARCH_FINDREPLACE,
 		B_TRANSLATE("Find/Replace" B_UTF8_ELLIPSIS), "find");
-	fToolbar->AddGlue();
+
+	fToolbar->AddSeparator();
 
 	fFunctionView = new FunctionView();
+	fToolbar->AddView(fFunctionView);
+	fToolbar->AddGlue();
+
+
 	/*
 	BGroupLayout *toolbar_layout = new BGroupLayout(B_HORIZONTAL, B_USE_SMALL_SPACING);
 	toolbar_layout->AddView(fToolbar);
@@ -239,7 +244,6 @@ EditorWindow::EditorWindow(bool stagger)
 	SetLayout(layout);
 	layout->AddView(fMainMenu);
 	layout->AddView(fToolbar);
-	layout->AddView(fFunctionView);
 	layout->AddView(fEditor,5);
 	layout->SetInsets(0, 0, -1, -1);
 	SetKeyMenuBar(fMainMenu);
