@@ -5,7 +5,19 @@
 #include <View.h>
 #include <PopUpMenu.h>
 #include <MenuField.h>
+#include <String.h>
+#include <Entry.h>
 
+#include <vector>
+
+
+struct ctags_tag {
+	BString name;
+	int32 line_nr;
+	BString scope;
+};
+
+typedef std::vector<ctags_tag> ctags_vector;
 
 enum {
 	FV_SELECTION_CHANGED = 'fv00',
@@ -15,10 +27,17 @@ enum {
 class FunctionView : public BView {
 public:
 	FunctionView();
+	void SetFile(BEntry file_entry);
+	void Reload();
 
 private:
-	BPopUpMenu *fPopUpMenu;
-	BMenuField *fMenuField;
+	BString get_ctags_data(BString filename);
+	void get_tags(BString ctags_data);
+
+	BPopUpMenu 		*fPopUpMenu;
+	BMenuField 		*fMenuField;
+	ctags_vector	fTags;
+	BString			fFilename;
 };
 
 

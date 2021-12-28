@@ -346,6 +346,9 @@ EditorWindow::OpenFile(const entry_ref* ref, Sci_Position line, Sci_Position col
 		fOpenedFilePath->SetTo(&entry);
 	RefreshTitle();
 
+	fFunctionView->SetFile(entry);
+	fFunctionView->Reload();
+
 	// load .editorconfig and apply settings
 	_SyncWithPreferences();
 }
