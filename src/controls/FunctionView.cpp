@@ -7,9 +7,10 @@
 #include <Path.h>
 
 #include <cstdio>
-#include <memory>
 #include <array>
+#include <unistd.h>
 #include <iostream>
+
 
 
 #undef B_TRANSLATION_CONTEXT
@@ -71,31 +72,58 @@ BString
 FunctionView::get_ctags_data(BString filename)
 {
 
-	BString ctags_command = "ctags --sort=no -f - --fields=\"sKNnzZ\" --output-format=\"u-ctags\"";
-	BString popen_cmd;
-	popen_cmd << ctags_command << " " << filename;
-	std::cout << popen_cmd << std::endl;
-
-	popen_cmd = "ls -l";
-
-	std::array<char, 128> buffer;
+	BString ctags_command;
+	ctags_command << "ctags -x " << filename;
 	BString ctags_data;
-	std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(popen_cmd.String(), "r"), pclose);
 
-	if (!pipe)
+	int stdout_pipe[2];
+	int original_stdout = dup(STDOUT_FILENO);
+
+	if (pipe(stdout_pipe) == 0)
 	{
-		while(fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+		dup2(stdout_pipe[1], STDOUT_FILENO);
+		close(stdout_pipe[1]);
+	}
+
+	int pipe_flags = fcntl(stdout_pipe[0], F_GETFD);
+	pipe_flags |= FD_CLOEXEC;
+	fcntl(stdout_pipe[0], F_SETFD, pipe_flags);
+
+	const char *arguments[4];
+	arguments[0] = "/bin/sh";
+	arguments[1] = "-c";
+	arguments[2] = ctags_command.String();
+	arguments[3] = nullptr;
+
+	thread_id newprogram_id = load_image(3, arguments, const_cast<const char **>(environ));
+	status_t error_code = newprogram_id;
+	if (error_code >= 0)
+	{
+		setpgid(newprogram_id, newprogram_id);
+		error_code = resume_thread(newprogram_id);
+	}
+
+	dup2 (original_stdout, STDOUT_FILENO);
+
+	if (error_code >= 0)
+	{
+		while (true)
 		{
-			ctags_data << buffer.data();
+			char buffer[4096];
+			ssize_t amount_read = read(stdout_pipe[0], buffer, sizeof(buffer));
+
+			if (amount_read <= 0)
+			{
+				break;
+			}
+
+			ctags_data.Append(buffer, amount_read);
 		}
 	}
-	else
-	{
-		std::cout << "Error running ctags..." << std::endl;
-		std::cout << "Error: " << errno << std::endl;
-	}
 
-	std::cout << ctags_data << std::endl;
+	close(stdout_pipe[0]);
+	status_t proc_exit_code = 0;
+	wait_for_thread(newprogram_id, &proc_exit_code);
 
 	return ctags_data;
 
@@ -105,7 +133,7 @@ FunctionView::get_ctags_data(BString filename)
 void
 FunctionView::get_tags(BString ctags_data)
 {
-	std::cout << "ctags_data: " << ctags_data << std::endl;
+	std::cout << ctags_data << std::endl;
 
 	fTags.clear();
 
