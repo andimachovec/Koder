@@ -64,7 +64,9 @@ FunctionView::Reload()
 	for (tags_iter = fTags.begin(); tags_iter != fTags.end(); ++tags_iter)
 	{
 		ctags_tag tag = *tags_iter;
-		fPopUpMenu->AddItem(new BMenuItem(tag.name, new BMessage(FV_SELECTION_CHANGED)));
+		BString tag_displayname;
+		tag_displayname << tag.scope << "::" << tag.name;
+		fPopUpMenu->AddItem(new BMenuItem(tag_displayname, new BMessage(FV_SELECTION_CHANGED)));
 	}
 
 }
