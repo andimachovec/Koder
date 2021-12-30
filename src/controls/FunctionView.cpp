@@ -24,13 +24,14 @@ FunctionView::FunctionView()
 {
 
 	fPopUpMenu = new BPopUpMenu("");
-	fMenuField = new BMenuField("",fPopUpMenu);
+	fButton = new BButton("f(x)", new BMessage(FV_OPEN_MENU));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_SMALL_SPACING)
 		.SetInsets(B_USE_SMALL_SPACING)
-		.Add(fMenuField)
+		.Add(fButton)
 	.Layout();
 
+	fButton->SetTarget(this);
 }
 
 
@@ -80,6 +81,15 @@ FunctionView::MessageReceived(BMessage *msg)
 
 	switch(msg->what)
 	{
+		case FV_OPEN_MENU:
+		{
+			std::cout << "opening function menu" << std::endl;
+			BPoint popupmenu_anchor = fButton->Bounds().LeftBottom();
+			popupmenu_anchor.y+=2;
+			fPopUpMenu->Go(popupmenu_anchor);
+			break;
+		}
+
 		case FV_SELECTION_CHANGED:
 		{
 			int32 selection_index = fPopUpMenu->FindMarkedIndex();

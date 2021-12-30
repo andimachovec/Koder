@@ -4,7 +4,7 @@
 
 #include <View.h>
 #include <PopUpMenu.h>
-#include <MenuField.h>
+#include <Button.h>
 #include <String.h>
 #include <Entry.h>
 
@@ -20,6 +20,7 @@ struct ctags_tag {
 typedef std::vector<ctags_tag> ctags_vector;
 
 enum {
+	FV_OPEN_MENU			= 'fvom',
 	FV_SELECTION_CHANGED 	= 'fvsc',
 	FV_GOTO_LINE 			= 'fvgl'
 };
@@ -37,7 +38,7 @@ private:
 	void get_tags(BString ctags_data);
 
 	BPopUpMenu 		*fPopUpMenu;
-	BMenuField 		*fMenuField;
+	BButton 		*fButton;
 	ctags_vector	fTags;
 	BString			fFilename;
 };
