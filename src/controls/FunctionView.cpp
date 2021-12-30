@@ -5,6 +5,7 @@
 #include <Catalog.h>
 #include <StringList.h>
 #include <Path.h>
+#include <Json.h>
 
 #include <cstdio>
 #include <array>
@@ -73,7 +74,7 @@ FunctionView::get_ctags_data(BString filename)
 {
 
 	BString ctags_command;
-	ctags_command << "ctags -x " << filename;
+	ctags_command << "ctags -f - --fields=\"sKNnzZ\" --output-format=\"json\" " << filename;
 	BString ctags_data;
 
 	int stdout_pipe[2];
@@ -133,37 +134,39 @@ FunctionView::get_ctags_data(BString filename)
 void
 FunctionView::get_tags(BString ctags_data)
 {
-	std::cout << ctags_data << std::endl;
 
 	fTags.clear();
 
-	//parse ctags output
 	BStringList ctags_data_lines;
 	ctags_data.Split("\n", true, ctags_data_lines);
 
 	for (int32 line_idx = 0; line_idx < ctags_data_lines.CountStrings(); ++line_idx)
 	{
+		BMessage json_message;
 		BString line = ctags_data_lines.StringAt(line_idx);
-		BStringList token_list;
-		line.Split("\t", false, token_list);
+		BJson::Parse(line, json_message);
 
-		BString kind = token_list.StringAt(3).RemoveFirst("kind:");
-		if (kind == "function")
+		const char *kind;
+		json_message.FindString("kind", &kind);
+
+		if (BString(kind) == "function")
 		{
 			ctags_tag tag;
-			tag.name = token_list.StringAt(0);
-			tag.line_nr = atoi(token_list.StringAt(4).RemoveFirst("line:").String());
+			const char *name;
+			double line_nr;
+			const char *scope;
 
-			BString scope = token_list.StringAt(5);
-			int32 cut_pos = scope.FindLast(":");
-			if (cut_pos	> 0)
-			{
-				tag.scope = scope.Remove(0, cut_pos+1);
-			}
+			json_message.FindString("name", &name);
+			tag.name = name;
+
+			json_message.FindDouble("line", &line_nr);
+			tag.line_nr = line_nr;
+
+			json_message.FindString("scope", &scope);
+			tag.scope = scope;
 
 			fTags.push_back(tag);
 		}
-
 	}
 
 }
