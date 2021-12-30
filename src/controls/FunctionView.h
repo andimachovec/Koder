@@ -20,7 +20,8 @@ struct ctags_tag {
 typedef std::vector<ctags_tag> ctags_vector;
 
 enum {
-	FV_SELECTION_CHANGED = 'fv00',
+	FV_SELECTION_CHANGED 	= 'fvsc',
+	FV_GOTO_LINE 			= 'fvgl'
 };
 
 
@@ -29,6 +30,7 @@ public:
 	FunctionView();
 	void SetFile(BEntry file_entry);
 	void Reload();
+	void MessageReceived(BMessage *msg);
 
 private:
 	BString get_ctags_data(BString filename);

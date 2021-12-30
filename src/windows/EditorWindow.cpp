@@ -786,6 +786,7 @@ EditorWindow::MessageReceived(BMessage* message)
 				_SyncWithPreferences();
 			}
 		} break;
+		case FV_GOTO_LINE:
 		case GTLW_GO: {
 			int32 line;
 			if(message->FindInt32("line", &line) == B_OK) {

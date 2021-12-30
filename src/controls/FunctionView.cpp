@@ -69,7 +69,35 @@ FunctionView::Reload()
 		fPopUpMenu->AddItem(new BMenuItem(tag_displayname, new BMessage(FV_SELECTION_CHANGED)));
 	}
 
+	fPopUpMenu->SetTargetForItems(this);
+
 }
+
+
+void
+FunctionView::MessageReceived(BMessage *msg)
+{
+
+	switch(msg->what)
+	{
+		case FV_SELECTION_CHANGED:
+		{
+			int32 selection_index = fPopUpMenu->FindMarkedIndex();
+			int32 line_nr = fTags[selection_index].line_nr;
+
+			BMessage goto_line_message(FV_GOTO_LINE);
+			goto_line_message.AddInt32("line", line_nr);
+			Window()->PostMessage(&goto_line_message);
+
+			break;
+		}
+
+		default:
+			BView::MessageReceived(msg);
+			break;
+	}
+}
+
 
 BString
 FunctionView::get_ctags_data(BString filename)
