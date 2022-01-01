@@ -65,7 +65,12 @@ FunctionView::Reload()
 	{
 		ctags_tag tag = *tags_iter;
 		BString tag_displayname;
-		tag_displayname << tag.scope << "::" << tag.name;
+		if (!tag.scope.IsEmpty())
+		{
+			tag_displayname << tag.scope << "::";
+		}
+
+		tag_displayname << tag.name;
 		fPopUpMenu->AddItem(new BMenuItem(tag_displayname, new BMessage(FV_SELECTION_CHANGED)));
 	}
 
