@@ -32,6 +32,7 @@ public:
 	void SetFile(BEntry file_entry);
 	void Reload();
 	void MessageReceived(BMessage *msg);
+	void AttachedToWindow();
 
 private:
 	BString get_ctags_data(BString filename);

@@ -31,7 +31,6 @@ FunctionView::FunctionView()
 		.Add(fButton)
 	.Layout();
 
-	fButton->SetTarget(this);
 }
 
 
@@ -83,10 +82,9 @@ FunctionView::MessageReceived(BMessage *msg)
 	{
 		case FV_OPEN_MENU:
 		{
-			std::cout << "opening function menu" << std::endl;
-			BPoint popupmenu_anchor = fButton->Bounds().LeftBottom();
-			popupmenu_anchor.y+=2;
-			fPopUpMenu->Go(popupmenu_anchor);
+			BPoint popupmenu_anchor = ConvertToScreen(fButton->Bounds().LeftBottom());
+			popupmenu_anchor.y+=10;
+			fPopUpMenu->Go(popupmenu_anchor, true, false, BRect());
 			break;
 		}
 
@@ -108,6 +106,14 @@ FunctionView::MessageReceived(BMessage *msg)
 	}
 }
 
+
+void
+FunctionView::AttachedToWindow()
+{
+
+	fButton->SetTarget(this);
+
+}
 
 BString
 FunctionView::get_ctags_data(BString filename)
