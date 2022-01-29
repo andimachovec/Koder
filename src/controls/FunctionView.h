@@ -11,13 +11,15 @@
 #include <vector>
 
 
-struct ctags_tag {
-	BString name;
+class CtagsTag {
+public:	
+	bool operator < (const CtagsTag& tag) const;
+    BString name;
 	int32 line_nr;
 	BString scope;
 };
 
-typedef std::vector<ctags_tag> ctags_vector;
+typedef std::vector<CtagsTag> ctags_vector;
 
 enum {
 	FV_OPEN_MENU			= 'fvom',
@@ -33,10 +35,11 @@ public:
 	void Reload();
 	void MessageReceived(BMessage *msg);
 	void AttachedToWindow();
-
+	
 private:
 	BString get_ctags_data(BString filename);
 	void get_tags(BString ctags_data);
+	void sort_tags();
 
 	BPopUpMenu 		*fPopUpMenu;
 	BButton 		*fButton;

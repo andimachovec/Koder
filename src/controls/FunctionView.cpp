@@ -10,12 +10,22 @@
 #include <cstdio>
 #include <array>
 #include <unistd.h>
+#include <algorithm>
 #include <iostream>
 
 
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "FunctionView"
+
+
+bool
+CtagsTag::operator < (const CtagsTag& tag) const
+{
+	
+	return (scope < tag.scope);
+
+}
 
 
 FunctionView::FunctionView()
@@ -63,7 +73,7 @@ FunctionView::Reload()
 	ctags_vector::iterator tags_iter;
 	for (tags_iter = fTags.begin(); tags_iter != fTags.end(); ++tags_iter)
 	{
-		ctags_tag tag = *tags_iter;
+		CtagsTag tag = *tags_iter;
 		BString tag_displayname;
 		if (!tag.scope.IsEmpty())
 		{
@@ -202,7 +212,7 @@ FunctionView::get_tags(BString ctags_data)
 
 		if (BString(kind) == "function")
 		{
-			ctags_tag tag;
+			CtagsTag tag;
 			const char *name;
 			double line_nr;
 			const char *scope;
@@ -220,4 +230,9 @@ FunctionView::get_tags(BString ctags_data)
 		}
 	}
 
+	std::sort(fTags.begin(), fTags.end());
+
 }
+
+
+
