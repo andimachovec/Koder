@@ -23,6 +23,11 @@ bool
 CtagsTag::operator < (const CtagsTag& tag) const
 {
 	
+	if (scope == tag.scope)
+	{
+		return (name < tag.name);
+	}
+
 	return (scope < tag.scope);
 
 }
