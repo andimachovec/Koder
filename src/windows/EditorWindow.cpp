@@ -498,6 +498,7 @@ EditorWindow::MessageReceived(BMessage* message)
 		} break;
 		case SAVE_FILE: {
 			_Save();
+			fFunctionView->Reload();
 			message->SendReply((uint32) B_OK);
 				// TODO: error handling
 		} break;
