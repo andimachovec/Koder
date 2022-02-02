@@ -498,7 +498,6 @@ EditorWindow::MessageReceived(BMessage* message)
 		} break;
 		case SAVE_FILE: {
 			_Save();
-			fFunctionView->Reload();
 			message->SendReply((uint32) B_OK);
 				// TODO: error handling
 		} break;
@@ -1299,6 +1298,9 @@ EditorWindow::_Save()
 	}
 	// block until user has chosen location
 	while(fSavePanel->IsShowing()) UpdateIfNeeded();
+
+	//update function list
+	fFunctionView->Reload();
 }
 
 
