@@ -44,6 +44,7 @@
 #include "Styler.h"
 #include "ToolBar.h"
 #include "Utils.h"
+#include "FunctionView.h"
 
 
 #undef B_TRANSLATION_CONTEXT
@@ -222,6 +223,11 @@ EditorWindow::EditorWindow(bool stagger)
 		B_TRANSLATE("Koder preferences" B_UTF8_ELLIPSIS), "preferences");
 	fToolbar->AddAction(MAINMENU_SEARCH_FINDREPLACE,
 		B_TRANSLATE("Find/Replace" B_UTF8_ELLIPSIS), "find");
+
+	fToolbar->AddSeparator();
+
+	fFunctionView = new FunctionView();
+	fToolbar->AddView(fFunctionView);
 	fToolbar->AddGlue();
 
 	BGroupLayout *layout = new BGroupLayout(B_VERTICAL, 0);
