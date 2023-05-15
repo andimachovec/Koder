@@ -1301,6 +1301,8 @@ EditorWindow::_Save()
 	}
 	// block until user has chosen location
 	while(fSavePanel->IsShowing()) UpdateIfNeeded();
+
+	fFunctionView->Reload();
 }
 
 
