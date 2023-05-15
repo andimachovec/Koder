@@ -343,6 +343,9 @@ EditorWindow::OpenFile(const entry_ref* ref, Sci_Position line, Sci_Position col
 
 	// load .editorconfig and apply settings
 	_SyncWithPreferences();
+
+	fFunctionView->SetFile(entry);
+	fFunctionView->Reload();
 }
 
 
