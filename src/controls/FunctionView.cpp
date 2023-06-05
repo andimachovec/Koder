@@ -22,7 +22,7 @@
 bool
 CtagsTag::operator < (const CtagsTag& tag) const
 {
-	
+
 	if (scope == tag.scope)
 	{
 		return (name < tag.name);
@@ -136,7 +136,7 @@ FunctionView::AttachedToWindow()
 }
 
 BString
-FunctionView::get_ctags_data(BString filename)
+FunctionView::get_ctags_data(const BString& filename)
 {
 
 	BString ctags_command;
@@ -198,7 +198,7 @@ FunctionView::get_ctags_data(BString filename)
 
 
 void
-FunctionView::get_tags(BString ctags_data)
+FunctionView::get_tags(const BString& ctags_data)
 {
 
 	fTags.clear();

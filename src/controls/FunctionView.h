@@ -12,7 +12,7 @@
 
 
 class CtagsTag {
-public:	
+public:
 	bool operator < (const CtagsTag& tag) const;
     BString name;
 	int32 line_nr;
@@ -35,10 +35,10 @@ public:
 	void Reload();
 	void MessageReceived(BMessage *msg);
 	void AttachedToWindow();
-	
+
 private:
-	BString get_ctags_data(BString filename);
-	void get_tags(BString ctags_data);
+	BString get_ctags_data(const BString& filename);
+	void get_tags(const BString& ctags_data);
 	void sort_tags();
 
 	BPopUpMenu 		*fPopUpMenu;
