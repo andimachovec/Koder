@@ -6,13 +6,11 @@
 #include <StringList.h>
 #include <Path.h>
 #include <Json.h>
-
 #include <cstdio>
 #include <array>
 #include <unistd.h>
 #include <algorithm>
 #include <iostream>
-
 
 
 #undef B_TRANSLATION_CONTEXT
@@ -22,14 +20,10 @@
 bool
 CtagsTag::operator < (const CtagsTag& tag) const
 {
-
 	if (scope == tag.scope)
-	{
 		return (name < tag.name);
-	}
 
 	return (scope < tag.scope);
-
 }
 
 
@@ -37,7 +31,6 @@ FunctionView::FunctionView()
 	:
 	BView("functionview", B_SUPPORTS_LAYOUT)
 {
-
 	fPopUpMenu = new BPopUpMenu("");
 	fButton = new BButton("f(x)", new BMessage(FV_OPEN_MENU));
 
@@ -45,7 +38,6 @@ FunctionView::FunctionView()
 		.SetInsets(B_USE_SMALL_SPACING)
 		.Add(fButton)
 	.Layout();
-
 }
 
 
@@ -57,23 +49,18 @@ FunctionView::SetFile(BEntry file_entry)
 	fFilename = file_path.Path();
 
 	Reload();
-
 }
 
 
 void
 FunctionView::Reload()
 {
-
 	get_tags(get_ctags_data(fFilename));
 
 	//update menuitems
 	int32 item_count = fPopUpMenu->CountItems();
-
 	if (item_count > 0)
-	{
 		fPopUpMenu->RemoveItems(0, item_count, false);
-	}
 
 	ctags_vector::iterator tags_iter;
 	for (tags_iter = fTags.begin(); tags_iter != fTags.end(); ++tags_iter)
@@ -81,29 +68,25 @@ FunctionView::Reload()
 		CtagsTag tag = *tags_iter;
 		BString tag_displayname;
 		if (!tag.scope.IsEmpty())
-		{
 			tag_displayname << tag.scope << "::";
-		}
 
 		tag_displayname << tag.name;
 		fPopUpMenu->AddItem(new BMenuItem(tag_displayname, new BMessage(FV_SELECTION_CHANGED)));
 	}
 
 	fPopUpMenu->SetTargetForItems(this);
-
 }
 
 
 void
 FunctionView::MessageReceived(BMessage *msg)
 {
-
 	switch(msg->what)
 	{
 		case FV_OPEN_MENU:
 		{
 			BPoint popupmenu_anchor = ConvertToScreen(fButton->Bounds().LeftBottom());
-			popupmenu_anchor.y+=10;
+			popupmenu_anchor.y += 10;
 			fPopUpMenu->Go(popupmenu_anchor, true, false, BRect());
 			break;
 		}
@@ -130,10 +113,9 @@ FunctionView::MessageReceived(BMessage *msg)
 void
 FunctionView::AttachedToWindow()
 {
-
 	fButton->SetTarget(this);
-
 }
+
 
 BString
 FunctionView::get_ctags_data(const BString& filename)
@@ -180,9 +162,7 @@ FunctionView::get_ctags_data(const BString& filename)
 			ssize_t amount_read = read(stdout_pipe[0], buffer, sizeof(buffer));
 
 			if (amount_read <= 0)
-			{
 				break;
-			}
 
 			ctags_data.Append(buffer, amount_read);
 		}
@@ -193,14 +173,12 @@ FunctionView::get_ctags_data(const BString& filename)
 	wait_for_thread(newprogram_id, &proc_exit_code);
 
 	return ctags_data;
-
 }
 
 
 void
 FunctionView::get_tags(const BString& ctags_data)
 {
-
 	fTags.clear();
 
 	BStringList ctags_data_lines;
@@ -236,7 +214,6 @@ FunctionView::get_tags(const BString& ctags_data)
 	}
 
 	std::sort(fTags.begin(), fTags.end());
-
 }
 
 

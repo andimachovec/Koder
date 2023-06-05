@@ -7,7 +7,6 @@
 #include <Button.h>
 #include <String.h>
 #include <Entry.h>
-
 #include <vector>
 
 
@@ -19,7 +18,9 @@ public:
 	BString scope;
 };
 
+
 typedef std::vector<CtagsTag> ctags_vector;
+
 
 enum {
 	FV_OPEN_MENU			= 'fvom',
